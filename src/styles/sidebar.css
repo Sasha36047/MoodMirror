@@ -1,0 +1,215 @@
+.app-shell {
+  display: grid;
+  grid-template-columns: 98px minmax(0, 1fr);
+  align-items: start;
+  min-height: 100vh;
+  gap: 24px;
+  padding: 22px;
+  transition: grid-template-columns 0.32s ease;
+}
+
+.app-shell-expanded {
+  grid-template-columns: 232px minmax(0, 1fr);
+}
+
+.main-column {
+  min-width: 0;
+}
+
+.sidebar {
+  position: sticky;
+  top: 22px;
+  width: 100%;
+  max-width: 86px;
+  box-sizing: border-box;
+  height: calc(100vh - 44px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 16px 10px;
+  overflow: hidden;
+  transition:
+    width 0.32s ease,
+    padding 0.32s ease,
+    background 0.32s ease,
+    box-shadow 0.32s ease;
+}
+
+.sidebar-expanded {
+  max-width: 220px;
+  width: 100%;
+  padding: 16px 12px;
+}
+
+.brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  min-height: 54px;
+  gap: 0;
+  padding: 0;
+  margin: 0 auto 8px;
+}
+
+.sidebar-expanded .brand-mark,
+.app-shell-expanded .brand-mark {
+  width: 100%;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 8px;
+  margin: 0 0 8px;
+}
+
+.brand-orb {
+  width: 46px;
+  height: 46px;
+  flex: 0 0 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.96);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.brand-orb svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+}
+
+.brand-copy {
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  transform: translateX(-8px);
+  white-space: nowrap;
+  transition:
+    max-width 0.28s ease,
+    opacity 0.22s ease,
+    transform 0.28s ease;
+}
+
+.brand-copy-visible,
+.sidebar-expanded .brand-copy,
+.app-shell-expanded .brand-copy {
+  max-width: 136px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.brand-copy strong {
+  display: block;
+  font-size: 14px;
+}
+
+.brand-copy span {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.sidebar-nav {
+  flex: 1 1 auto;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-item {
+  width: 54px;
+  height: 54px;
+  min-height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0;
+  margin: 0 auto;
+  border-radius: 18px;
+  color: var(--muted);
+  transition:
+    background 0.22s ease,
+    color 0.22s ease,
+    transform 0.22s ease,
+    padding 0.32s ease,
+    box-shadow 0.22s ease;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.nav-item-active {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.07);
+}
+
+.sidebar-expanded .nav-item,
+.app-shell-expanded .nav-item {
+  width: 100%;
+  justify-content: flex-start;
+  gap: 18px;
+  padding: 0 14px;
+}
+
+.nav-icon {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  color: inherit;
+}
+
+.nav-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+}
+
+.nav-label {
+  overflow: hidden;
+  max-width: 0;
+  opacity: 0;
+  transform: translateX(-8px);
+  white-space: nowrap;
+  transition:
+    max-width 0.28s ease,
+    opacity 0.22s ease,
+    transform 0.28s ease;
+}
+
+.nav-label-visible,
+.sidebar-expanded .nav-label,
+.app-shell-expanded .nav-label {
+  max-width: 140px;
+  opacity: 1;
+  transform: translateX(0);
+}
+
+@media (max-width: 980px) {
+
+  .app-shell,
+  .app-shell-expanded {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+}
