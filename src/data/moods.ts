@@ -10,5 +10,5 @@ export const moods: MoodMeta[] = [
 export const moodGenreMap: Record<MoodKey, string> = { happy: "35", calm: "10749", sad: "18", energetic: "28", tired: "16", stressed: "10751" };
 export const moodBookQueryMap: Record<MoodKey, string> = {
     happy: "self growth happiness", sad: "healing psychology", calm: "mindfulness poetry",
-    energetic: "motivation success", stressed: "stress relief anxiety", tired: "rest recovery burnout"
+    energetic: "motivation success", stressed: "stress relief anxiety", tired: "rest"
 };
