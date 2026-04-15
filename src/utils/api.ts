@@ -99,8 +99,8 @@ export async function fetchMoviesByMood(mood: MoodKey): Promise<MediaItem[]> {
         title: movie.title,
         subtitle: movie.release_date?.slice(0, 4) || "Фильм",
         image: movie.poster_path
-          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-          : "/images/fallbacks/movies/1.jpg",
+        ? `/api/tmdb-image?path=${encodeURIComponent(movie.poster_path)}`
+        : "/images/fallbacks/movies/1.jpg",
         description: movie.overview || "Фильм, который может подойти под текущее настроение.",
         rating: typeof movie.vote_average === "number"
           ? Number(movie.vote_average.toFixed(1))
