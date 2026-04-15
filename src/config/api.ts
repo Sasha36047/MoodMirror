@@ -1,1 +1,2 @@
-export const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY;
+// Intentionally empty: TMDb key is server-only on Vercel (TMDB_API_KEY).
+export {};

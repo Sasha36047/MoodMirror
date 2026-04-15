@@ -1,4 +1,3 @@
-import { TMDB_API_KEY } from "../config/api";
 import { moodGenreMap, moodBookQueryMap } from "../data/moods";
 import { musicByMood } from "../data/musicData";
 import type { MediaItem, MoodKey } from "../types";
@@ -84,30 +83,37 @@ function upscaleArtwork(url?: string) {
 }
 
 export async function fetchMoviesByMood(mood: MoodKey): Promise<MediaItem[]> {
-  if (!TMDB_API_KEY || TMDB_API_KEY.includes("PASTE_")) return movieFallbacks[mood];
   try {
     const genre = moodGenreMap[mood];
-    const url = `https://api.themoviedb.org/3/discover/movie?api_key=${TMDB_API_KEY}&language=ru-RU&sort_by=popularity.desc&with_genres=${genre}`;
+    const url = `/api/movies?with_genres=${encodeURIComponent(String(genre))}&mood=${encodeURIComponent(String(mood))}`;
     const controller = new AbortController();
     const timeout = window.setTimeout(() => controller.abort(), 5000);
-    const response = await fetch(url, { signal: controller.signal });
-    window.clearTimeout(timeout);
-    if (!response.ok) throw new Error(`TMDb error: ${response.status}`);
-    const data = await response.json();
-    const results = (data.results || []).slice(0, 18).map((movie: any) => ({
-      id: movie.id,
-      title: movie.title,
-      subtitle: movie.release_date?.slice(0, 4) || "Фильм",
-      image: movie.poster_path
-        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-        : "/images/fallbacks/movies/1.jpg",
-      description: movie.overview || "Фильм, который может подойти под текущее настроение.",
-      rating: typeof movie.vote_average === "number" ? Number(movie.vote_average.toFixed(1)) : undefined,
-      tag: "TMDb",
-      source: "TMDb",
-      category: "movies",
-    }));
-    return results.length ? results : movieFallbacks[mood];
+ 
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) throw new Error(`TMDb error: ${response.status}`);
+ 
+      const data = await response.json();
+      const results = (data.results || []).slice(0, 18).map((movie: any) => ({
+        id: movie.id,
+        title: movie.title,
+        subtitle: movie.release_date?.slice(0, 4) || "Фильм",
+        image: movie.poster_path
+          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
+          : "/images/fallbacks/movies/1.jpg",
+        description: movie.overview || "Фильм, который может подойти под текущее настроение.",
+        rating: typeof movie.vote_average === "number"
+          ? Number(movie.vote_average.toFixed(1))
+          : undefined,
+        tag: "TMDb",
+        source: "TMDb",
+        category: "movies",
+      }));
+ 
+      return results.length ? results : movieFallbacks[mood];
+    } finally {
+      window.clearTimeout(timeout);
+    }
   } catch (error) {
     console.error("Ошибка при загрузке фильмов:", error);
     return movieFallbacks[mood];
