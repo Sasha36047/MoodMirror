@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import type { MoodKey } from "../../types";
 
@@ -16,15 +16,13 @@ function TypewriterText({
   emphasisText,
   speed = 78,
   delay = 250,
-  highlightActive,
-  onComplete,
+  mood,
 }: {
   beforeText: string;
   emphasisText: string;
   speed?: number;
   delay?: number;
-  highlightActive: boolean;
-  onComplete?: () => void;
+  mood: MoodKey;
 }) {
   const fullText = useMemo(
     () => `${beforeText}${emphasisText}`,
@@ -32,9 +30,13 @@ function TypewriterText({
   );
 
   const [visibleCount, setVisibleCount] = useState(0);
+  const [highlightActive, setHighlightActive] = useState(false);
+  const completedRef = useRef(false);
 
   useEffect(() => {
     setVisibleCount(0);
+    setHighlightActive(false);
+    completedRef.current = false;
 
     let intervalId: number | undefined;
 
@@ -47,7 +49,10 @@ function TypewriterText({
 
         if (index >= fullText.length) {
           window.clearInterval(intervalId);
-          onComplete?.();
+          if (!completedRef.current) {
+            completedRef.current = true;
+            setHighlightActive(true);
+          }
         }
       }, speed);
     }, delay);
@@ -56,10 +61,9 @@ function TypewriterText({
       window.clearTimeout(startTimer);
       if (intervalId) window.clearInterval(intervalId);
     };
-  }, [fullText, speed, delay, onComplete]);
+  }, [fullText, speed, delay, mood]);
 
   const beforeLength = beforeText.length;
-
   const visibleBefore = fullText.slice(0, Math.min(visibleCount, beforeLength));
   const visibleEmphasis =
     visibleCount > beforeLength
@@ -67,7 +71,7 @@ function TypewriterText({
       : "";
 
   return (
-    <>
+    <span className="text-screen-typewriter-layer" aria-live="polite">
       <span>{visibleBefore}</span>
       <span
         className={`text-screen-emphasis ${
@@ -76,20 +80,19 @@ function TypewriterText({
       >
         {visibleEmphasis}
       </span>
-    </>
+    </span>
   );
 }
 
 export function TextScreenSection({ mood, copy }: TextScreenSectionProps) {
-  const [highlightActive, setHighlightActive] = useState(false);
-
-  useEffect(() => {
-    setHighlightActive(false);
-  }, [mood]);
-
   const beforeText = useMemo(
     () => `${copy.lead} ${copy.middle} `,
     [copy]
+  );
+
+  const fullText = useMemo(
+    () => `${beforeText}${copy.emphasis}`,
+    [beforeText, copy.emphasis]
   );
 
   return (
@@ -103,20 +106,21 @@ export function TextScreenSection({ mood, copy }: TextScreenSectionProps) {
       <div className="section-center">
         <div className="text-screen-inner">
           <motion.p
-            key={`${mood}-text`}
-            className="text-screen-copy"
+            key={mood}
+            className="text-screen-copy text-screen-copy-shell"
             initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
+            <span className="text-screen-copy-placeholder">{fullText}</span>
+
             <TypewriterText
               beforeText={beforeText}
               emphasisText={copy.emphasis}
               speed={78}
               delay={250}
-              highlightActive={highlightActive}
-              onComplete={() => setHighlightActive(true)}
+              mood={mood}
             />
           </motion.p>
         </div>

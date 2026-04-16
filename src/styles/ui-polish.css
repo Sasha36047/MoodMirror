@@ -1461,6 +1461,23 @@ h1,
   white-space: pre-wrap;
 }
 
+.text-screen-copy-shell {
+  position: relative;
+}
+
+.text-screen-copy-placeholder {
+  visibility: hidden;
+  display: block;
+  white-space: pre-wrap;
+  pointer-events: none;
+}
+
+.text-screen-typewriter-layer {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
 .text-screen-emphasis {
   display: inline;
   font-weight: 400;
