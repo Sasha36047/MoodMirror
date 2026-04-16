@@ -77,8 +77,8 @@ export function TopTenFlowPage({
         <section className="content-section glass-panel">
           <div className="section-header">
             <div>
-              <h2>Подборка</h2>
-              <p>Лента карточек, где главное — ощущение, смысл и отклик.</p>
+              <h2>Top 10</h2>
+              <p>Спокойный поток карточек: маленькая обложка слева, смысл и настроение справа.</p>
             </div>
           </div>
 

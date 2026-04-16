@@ -42,8 +42,8 @@ export function TopTenStaticPage({ eyebrow, title, description, sideTitle, sideT
         <section className="content-section glass-panel">
           <div className="section-header">
             <div>
-              <h2>Top 10</h2>
-              <p>Небольшая карточка слева, смысл и короткое описание справа.</p>
+            <h2>Подборка</h2>
+            <p>Лента карточек, где главное — ощущение, смысл и отклик.</p>
             </div>
           </div>
 
