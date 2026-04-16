@@ -1445,7 +1445,6 @@ h1,
 }
 
 .text-screen-inner {
-  position: relative;
   width: 100%;
   max-width: 980px;
   margin: 0 auto;
@@ -1475,13 +1474,7 @@ h1,
     transform 0.8s ease;
 }
 
-.text-screen-emphasis-overlay {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.text-screen-emphasis-active .text-screen-emphasis {
+.text-screen-emphasis-active {
   opacity: 1;
   filter: blur(0);
   font-weight: 700;

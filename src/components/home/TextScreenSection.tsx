@@ -12,16 +12,25 @@ interface TextScreenSectionProps {
 }
 
 function TypewriterText({
-  text,
-  speed = 65,
+  beforeText,
+  emphasisText,
+  speed = 78,
   delay = 250,
+  highlightActive,
   onComplete,
 }: {
-  text: string;
+  beforeText: string;
+  emphasisText: string;
   speed?: number;
   delay?: number;
+  highlightActive: boolean;
   onComplete?: () => void;
 }) {
+  const fullText = useMemo(
+    () => `${beforeText}${emphasisText}`,
+    [beforeText, emphasisText]
+  );
+
   const [visibleCount, setVisibleCount] = useState(0);
 
   useEffect(() => {
@@ -36,7 +45,7 @@ function TypewriterText({
         index += 1;
         setVisibleCount(index);
 
-        if (index >= text.length) {
+        if (index >= fullText.length) {
           window.clearInterval(intervalId);
           onComplete?.();
         }
@@ -47,9 +56,28 @@ function TypewriterText({
       window.clearTimeout(startTimer);
       if (intervalId) window.clearInterval(intervalId);
     };
-  }, [text, speed, delay, onComplete]);
+  }, [fullText, speed, delay, onComplete]);
 
-  return <>{text.slice(0, visibleCount)}</>;
+  const beforeLength = beforeText.length;
+
+  const visibleBefore = fullText.slice(0, Math.min(visibleCount, beforeLength));
+  const visibleEmphasis =
+    visibleCount > beforeLength
+      ? fullText.slice(beforeLength, visibleCount)
+      : "";
+
+  return (
+    <>
+      <span>{visibleBefore}</span>
+      <span
+        className={`text-screen-emphasis ${
+          highlightActive ? "text-screen-emphasis-active" : ""
+        }`}
+      >
+        {visibleEmphasis}
+      </span>
+    </>
+  );
 }
 
 export function TextScreenSection({ mood, copy }: TextScreenSectionProps) {
@@ -59,8 +87,8 @@ export function TextScreenSection({ mood, copy }: TextScreenSectionProps) {
     setHighlightActive(false);
   }, [mood]);
 
-  const fullText = useMemo(
-    () => `${copy.lead} ${copy.middle} ${copy.emphasis}`,
+  const beforeText = useMemo(
+    () => `${copy.lead} ${copy.middle} `,
     [copy]
   );
 
@@ -77,33 +105,19 @@ export function TextScreenSection({ mood, copy }: TextScreenSectionProps) {
           <motion.p
             key={`${mood}-text`}
             className="text-screen-copy"
-            style={{ whiteSpace: "pre-wrap" }}
             initial={{ opacity: 0, y: 16, filter: "blur(6px)" }}
             whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
             viewport={{ once: true, amount: 0.5 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           >
             <TypewriterText
-              text={fullText}
-              speed={80}
+              beforeText={beforeText}
+              emphasisText={copy.emphasis}
+              speed={78}
               delay={250}
+              highlightActive={highlightActive}
               onComplete={() => setHighlightActive(true)}
             />
-          </motion.p>
-
-          <motion.p
-            className={`text-screen-copy text-screen-emphasis-overlay ${
-              highlightActive ? "text-screen-emphasis-active" : ""
-            }`}
-            aria-hidden="true"
-            initial={false}
-            animate={{ opacity: highlightActive ? 1 : 0 }}
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <span style={{ visibility: "hidden" }}>
-              {copy.lead} {copy.middle}{" "}
-            </span>
-            <span className="text-screen-emphasis">{copy.emphasis}</span>
           </motion.p>
         </div>
       </div>
