@@ -1482,7 +1482,7 @@ h1,
   display: inline;
   font-weight: 400;
   opacity: 0.72;
-  filter: blur(4px);
+  filter: blur(8px);
   transition:
     opacity 0.8s ease,
     filter 0.8s ease,
